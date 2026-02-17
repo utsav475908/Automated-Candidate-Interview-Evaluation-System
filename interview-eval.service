@@ -1,0 +1,13 @@
+[Unit]
+Description=Gunicorn instance to serve Automated Candidate Interview System
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/Automated-Candidate-Interview-Evaluation-System
+Environment="PATH=/home/ubuntu/Automated-Candidate-Interview-Evaluation-System/venv/bin"
+ExecStart=/home/ubuntu/Automated-Candidate-Interview-Evaluation-System/venv/bin/uvicorn app:app --host 0.0.0.0 --port 8000
+
+[Install]
+WantedBy=multi-user.target

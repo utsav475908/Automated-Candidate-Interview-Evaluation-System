@@ -19,6 +19,11 @@ sudo systemctl daemon-reload
 sudo systemctl enable interview-eval
 sudo systemctl restart interview-eval
 
-# Setup Nginx (Reverse Proxy)
+# Setup Nginx (SSL/HTTPS)
+sudo mkdir -p /etc/nginx/ssl
+if [ ! -f /etc/nginx/ssl/nginx.crt ]; then
+    sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt -subj "/C=US/ST=State/L=City/O=Organization/CN=localhost"
+fi
+
 sudo cp nginx_app.conf /etc/nginx/sites-available/default
 sudo systemctl restart nginx

@@ -19,6 +19,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable interview-eval
 sudo systemctl restart interview-eval
 
-# Setup Nginx (Simple proxy pass)
-# (User might want to configure this manually for SSL/Domain, but basic proxy pass helps)
-# For now, we'll just open port 8000 in security group instructions.
+# Setup Nginx (Reverse Proxy)
+sudo cp nginx_app.conf /etc/nginx/sites-available/default
+sudo systemctl restart nginx

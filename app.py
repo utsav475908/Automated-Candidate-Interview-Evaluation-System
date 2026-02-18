@@ -97,18 +97,29 @@ async def read_root(request: Request):
 @app.websocket("/ws/interview")
 async def websocket_endpoint(websocket: WebSocket, pos: str = Query("AI Engineer")):
     await websocket.accept()
+    print(f"WS: Accepted connection for {pos}")
     try:
+        print("WS: Creating interview team...")
         team = await create_interview_team(websocket, pos)
+        print("WS: Team created.")
         
+        print("WS: Sending SYSTEM_INFO...")
         await websocket.send_text(f"SYSTEM_INFO:Starting interview for {pos}...")
+        print("WS: SYSTEM_INFO sent. Starting run_stream...")
 
         async for message in team.run_stream(task='Start the interview.'):
+            print(f"WS: Received stream message type: {type(message)}")
             if isinstance(message, TaskResult):
+                print(f"WS: TaskResult: {message.stop_reason}")
                 await websocket.send_text(f"SYSTEM_END:{message.stop_reason}")
             else:
+                print(f"WS: Message Content: {message.content}")
                 await websocket.send_text(f"{message.source}:{message.content}")
+        print("WS: Stream finished.")
 
     except WebSocketDisconnect:
         print("WebSocket disconnected.")
     except Exception as e:
         print(f"Error: {e}")
+        import traceback
+        traceback.print_exc()
